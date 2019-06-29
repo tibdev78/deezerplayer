@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">deezer-play</string>
+    <string name="albums_list">Albums list</string>
 </resources>
