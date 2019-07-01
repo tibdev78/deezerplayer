@@ -3,7 +3,8 @@ package com.example.deezer_play.buisiness.api
 import android.util.Log
 import com.example.deezer_play.albums.AlbumsData
 import com.example.deezer_play.albums.AlbumsResponse
-import okhttp3.OkHttpClient
+import com.example.deezer_play.tracks.TracksData
+import com.example.deezer_play.tracks.TracksResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +37,20 @@ object DeezerProvider {
 
         })
 
+    }
+
+    fun getTracks(idAlbum: String, listener: Listener<List<TracksData>>) {
+        service.getTracksAlbum(idAlbum).enqueue(object: Callback<TracksResponse> {
+            override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                listener.onError(t)
+            }
+
+            override fun onResponse(call: Call<TracksResponse>, response: Response<TracksResponse>) {
+                val  body = response.body()!!.tracksList
+                listener.onSuccess(body)
+            }
+
+        })
     }
 
     interface Listener<T> {

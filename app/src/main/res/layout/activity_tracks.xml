@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".tracks.TracksActivity">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:id="@+id/header_album"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
+            <ImageView
+                    android:id="@+id/albums_cover"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    tools:src="@tools:sample/avatars"/>
+
+            <TextView
+                    android:id="@+id/album_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="ss"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/trackslist_recycleview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_tracks"
+                android:layout_below="@+id/header_album">
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
