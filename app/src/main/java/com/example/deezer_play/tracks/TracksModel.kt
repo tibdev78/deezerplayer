@@ -13,6 +13,8 @@ data class TracksData(
     var id: Int,
     @SerializedName("title")
     var title: String,
+    @SerializedName("preview")
+    var preview: String,
     @SerializedName("artist")
     var artist: ArtistTracks)
 

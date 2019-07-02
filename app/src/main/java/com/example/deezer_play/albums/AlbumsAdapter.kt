@@ -37,6 +37,8 @@ class AlbumsAdapter: RecyclerView.Adapter<AlbumsAdapter.AlbumsListViewHolder>() 
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, TracksActivity::class.java)
             intent.putExtra("idAlbum", AlbumsData.id.toString())
+            intent.putExtra("nameAlbum", AlbumsData.title)
+            intent.putExtra("cover", AlbumsData.cover)
             holder.itemView.context.startActivity(intent)
         }
 
