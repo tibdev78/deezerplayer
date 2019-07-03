@@ -40,5 +40,6 @@
                 tools:listitem="@layout/item_tracks"
                 android:layout_below="@+id/header_album">
         </android.support.v7.widget.RecyclerView>
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

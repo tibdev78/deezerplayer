@@ -18,7 +18,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".tracks.TracksActivity" />
-        <activity android:name=".track.TrackActivity" />
     </application>
 
 </manifest>

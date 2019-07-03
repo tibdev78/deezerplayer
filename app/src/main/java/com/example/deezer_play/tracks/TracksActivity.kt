@@ -1,27 +1,22 @@
 package com.example.deezer_play.tracks
 
 import android.os.Bundle
+import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.deezer_play.R
 import com.example.deezer_play.buisiness.api.DeezerProvider
-import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_tracks.*
-import org.json.JSONObject
-import retrofit2.http.Url
 
-class TracksActivity: AppCompatActivity(){
+class TracksActivity: AppCompatActivity() {
 
     private lateinit var tracksRecyclerView: RecyclerView
     private var tracksAdapter: TracksAdapter? = null
     private var albumInformationData = mutableListOf<String>()
+    private var actionbar: ActionBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,13 +24,22 @@ class TracksActivity: AppCompatActivity(){
 
         tracksRecyclerView = findViewById(R.id.trackslist_recycleview)
 
+        this.actionbar = supportActionBar
+        this.actionbar!!.setDisplayHomeAsUpEnabled(true)
+
         displayedTracks()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun displayedTracks() {
         val idAlbum: String = intent.getStringExtra("idAlbum")
         val nameAlbum: String = intent.getStringExtra("nameAlbum")
         val cover: String = intent.getStringExtra("cover")
+
         tracksAdapter = TracksAdapter()
 
         this.albumInformationData.add(0, nameAlbum)
