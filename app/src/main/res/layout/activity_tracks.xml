@@ -8,6 +8,7 @@
         tools:context=".tracks.TracksActivity">
 
     <RelativeLayout
+            android:id="@+id/tracks_activity_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <LinearLayout
@@ -40,5 +41,6 @@
                 tools:listitem="@layout/item_tracks"
                 android:layout_below="@+id/header_album">
         </android.support.v7.widget.RecyclerView>
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
