@@ -14,6 +14,7 @@ class TracksAdapter: RecyclerView.Adapter<TracksAdapter.TracksListViewHolder>() 
 
     private var tracksData: List<TracksData>? = null
     private var albumsInformation: List<String>? = null
+    private var listener: ClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TracksListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_tracks, parent, false)
@@ -31,8 +32,8 @@ class TracksAdapter: RecyclerView.Adapter<TracksAdapter.TracksListViewHolder>() 
             intent.putExtra("nameAlbum", albumsInformation!![0])
             intent.putExtra("coverAlbum", albumsInformation!![1])
             holder.itemView.context.startActivity(intent)*/
-            val fragment = TrackFragment.newInstance()
-            fragment.openFragment(fragment)
+            val fragment = TrackFragment.newInstance(albumsInformation!![1], albumsInformation!![0])
+            listener?.onClick(fragment)
 
         }
     }
@@ -44,6 +45,14 @@ class TracksAdapter: RecyclerView.Adapter<TracksAdapter.TracksListViewHolder>() 
 
     fun setAlbumInformation(albumsInformation: List<String>) {
         this.albumsInformation = albumsInformation
+    }
+
+    fun setListener(listener: ClickListener) {
+        this.listener = listener
+    }
+
+    interface ClickListener {
+       fun onClick(fragment: TrackFragment)
     }
 
     class TracksListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

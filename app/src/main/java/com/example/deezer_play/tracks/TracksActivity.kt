@@ -5,10 +5,12 @@ import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.deezer_play.R
 import com.example.deezer_play.buisiness.api.DeezerProvider
+import com.example.deezer_play.track.TrackFragment
 import kotlinx.android.synthetic.main.activity_tracks.*
 
 class TracksActivity: AppCompatActivity() {
@@ -47,6 +49,8 @@ class TracksActivity: AppCompatActivity() {
 
         this.setInformationAlbum(this.albumInformationData)
 
+        clickItemList(tracksAdapter!!)
+
         DeezerProvider.getTracks(idAlbum, object: DeezerProvider.Listener<List<TracksData>> {
             override fun onSuccess(data: List<TracksData>) {
                 tracksAdapter?.setData(data)
@@ -67,5 +71,17 @@ class TracksActivity: AppCompatActivity() {
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(albums_cover)
         tracksAdapter?.setAlbumInformation(albumInformation)
+    }
+
+    private fun clickItemList(tracksAdapter: TracksAdapter) {
+        tracksAdapter.setListener(object : TracksAdapter.ClickListener {
+            override fun onClick(fragment: TrackFragment) {
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.tracks_activity_content, fragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }
+
+        })
     }
 }
