@@ -9,7 +9,7 @@ data class AlbumsData(
     var id: Int,
     @SerializedName("title")
     var title: String,
-    @SerializedName("cover_small")
+    @SerializedName("cover_medium")
     var cover: String,
     @SerializedName("tracklist")
     var tracklist: String,

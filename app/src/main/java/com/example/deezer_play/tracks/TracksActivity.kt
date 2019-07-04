@@ -76,6 +76,7 @@ class TracksActivity: AppCompatActivity() {
     private fun clickItemList(tracksAdapter: TracksAdapter) {
         tracksAdapter.setListener(object : TracksAdapter.ClickListener {
             override fun onClick(fragment: TrackFragment) {
+                supportActionBar?.hide()
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.tracks_activity_content, fragment)
                 transaction.addToBackStack(null)

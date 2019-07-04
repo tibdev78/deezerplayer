@@ -32,7 +32,10 @@ class TracksAdapter: RecyclerView.Adapter<TracksAdapter.TracksListViewHolder>() 
             intent.putExtra("nameAlbum", albumsInformation!![0])
             intent.putExtra("coverAlbum", albumsInformation!![1])
             holder.itemView.context.startActivity(intent)*/
-            val fragment = TrackFragment.newInstance(albumsInformation!![1], albumsInformation!![0])
+            val fragment = TrackFragment.newInstance(
+                albumsInformation!![1],
+                albumsInformation!![0]
+            )
             listener?.onClick(fragment)
 
         }
