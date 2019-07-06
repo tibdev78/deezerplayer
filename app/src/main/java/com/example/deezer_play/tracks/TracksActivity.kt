@@ -1,6 +1,8 @@
 package com.example.deezer_play.tracks
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -76,11 +78,11 @@ class TracksActivity: AppCompatActivity() {
     private fun clickItemList(tracksAdapter: TracksAdapter) {
         tracksAdapter.setListener(object : TracksAdapter.ClickListener {
             override fun onClick(fragment: TrackFragment) {
-                supportActionBar?.hide()
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.tracks_activity_content, fragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
+                supportActionBar?.hide()
             }
 
         })

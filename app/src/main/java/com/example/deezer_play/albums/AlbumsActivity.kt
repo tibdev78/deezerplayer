@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import com.example.deezer_play.R
 import com.example.deezer_play.buisiness.api.DeezerProvider
 import kotlinx.android.synthetic.main.activity_albums.*
@@ -13,13 +15,13 @@ class AlbumsActivity: AppCompatActivity(){
 
     private lateinit var albumsRecyclerView: RecyclerView
     private var albumsAdapter: AlbumsAdapter? = null
+    private var progressBar: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_albums)
 
         albumsRecyclerView = findViewById(R.id.albumslist_recyclerview)
-
         displayedAlbums()
     }
 
