@@ -55,7 +55,7 @@
             android:layout_below="@id/track_name">
 
         <TextView
-                android:id="@+id/lblCurrentTiming"
+                android:id="@+id/currentTiming"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -67,7 +67,7 @@
                 android:textColor="#bfbfc1"/>
 
         <TextView
-                android:id="@+id/lblDuration"
+                android:id="@+id/duration"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -84,8 +84,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/lblDuration"
-                android:layout_toEndOf="@id/lblCurrentTiming"
+                android:layout_toStartOf="@id/duration"
+                android:layout_toEndOf="@id/currentTiming"
                 android:max="30000"
                 android:min="0"
                 android:progress="0"

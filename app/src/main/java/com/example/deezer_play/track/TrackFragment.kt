@@ -1,17 +1,9 @@
 package com.example.deezer_play.track
 
-import android.app.ActionBar
-import android.content.Context
-import android.media.AudioAttributes
-import android.media.MediaPlayer
-import android.net.Uri
+
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,16 +12,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.deezer_play.PlayerMusic
 import com.example.deezer_play.R
-import com.example.deezer_play.tracks.TracksActivity
 import com.example.deezer_play.tracks.TracksData
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_tracks.view.*
-import kotlinx.android.synthetic.main.item_tracks.*
 import kotlinx.android.synthetic.main.track_fragment.*
 import kotlinx.android.synthetic.main.track_fragment.track_name
 import java.io.Serializable
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
 class TrackFragment : Fragment() {
 
@@ -79,6 +65,7 @@ class TrackFragment : Fragment() {
         closeFragment()
         val playButon: ImageView = view.findViewById(R.id.btPlay)
         launchMusic(tracksData.preview, playButon)
+
     }
 
     private fun closeFragment() {
@@ -90,6 +77,13 @@ class TrackFragment : Fragment() {
     }
     private fun launchMusic(preview: String, button: ImageView) {
            playerMusic.setMediaplayer(preview, context!!)
-           playerMusic.prepareMediaPlayer(button)
+           playerMusic.prepareMediaPlayer(button, context!!)
+           playerMusic.initInitializeSeekBar(currentTiming, duration, sbProgress)
+           playerMusic.progressSeekBar(sbProgress)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        playerMusic.stopMusic()
     }
 }
