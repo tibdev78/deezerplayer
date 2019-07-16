@@ -63,7 +63,7 @@
                 android:layout_marginRight="15dp"
                 android:fontFamily="@font/oxygen"
                 android:gravity="center"
-                android:text="0:00"
+                android:text="@string/min_value_music"
                 android:textColor="#bfbfc1"/>
 
         <TextView
@@ -76,7 +76,7 @@
                 android:layout_marginRight="15dp"
                 android:fontFamily="@font/oxygen"
                 android:gravity="center"
-                android:text="0:30"
+                android:text="@string/max_value_music"
                 android:textColor="#bfbfc1"/>
 
         <SeekBar

@@ -64,8 +64,7 @@ class TrackFragment : Fragment() {
 
         closeFragment()
         val playButon: ImageView = view.findViewById(R.id.btPlay)
-        launchMusic(tracksData.preview, playButon)
-
+        launchMusic(tracksData.preview, playButon, view)
     }
 
     private fun closeFragment() {
@@ -75,15 +74,17 @@ class TrackFragment : Fragment() {
             (activity as AppCompatActivity).supportActionBar?.show()
         }
     }
-    private fun launchMusic(preview: String, button: ImageView) {
-           playerMusic.setMediaplayer(preview, context!!)
-           playerMusic.prepareMediaPlayer(button, context!!)
-           playerMusic.initInitializeSeekBar(currentTiming, duration, sbProgress)
-           playerMusic.progressSeekBar(sbProgress)
+    private fun launchMusic(preview: String, button: ImageView, view: View) {
+            context?.also {ctx ->
+                playerMusic.setMediaplayer(preview)
+                playerMusic.prepareMediaPlayer(button, ctx, view)
+                playerMusic.progressSeekBar(sbProgress)
+            }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         playerMusic.stopMusic()
     }
+
 }

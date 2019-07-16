@@ -7,12 +7,13 @@ import android.net.Uri
 import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import kotlinx.android.synthetic.main.track_fragment.view.*
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
-import java.time.Duration
 
 class PlayerMusic {
     private lateinit var mediaPlayer: MediaPlayer
@@ -26,19 +27,18 @@ class PlayerMusic {
         return builder.build()
     }
 
-    fun setMediaplayer(preview: String, context: Context) {
+    fun setMediaplayer(preview: String) {
         mediaPlayer = MediaPlayer()
         val audioAttributes = createAudioAttributes()
         mediaPlayer.setAudioAttributes(audioAttributes)
-        val previewUri: Uri = Uri.parse(preview)
         try {
-            mediaPlayer.setDataSource(context, previewUri)
+            mediaPlayer.setDataSource(preview)
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         }
     }
 
-    fun prepareMediaPlayer(button: ImageView, context: Context) {
+    fun prepareMediaPlayer(button: ImageView, context: Context, view: View) {
         val image_play = ContextCompat.getDrawable(context, R.drawable.ic_play)
         val image_pause = ContextCompat.getDrawable(context, R.drawable.ic_pause)
 
@@ -53,6 +53,7 @@ class PlayerMusic {
                 if (!mediaPlayer.isPlaying) {
                     button.setImageDrawable(image_pause)
                     mediaPlayer.start()
+                    initInitializeSeekBar(view, context)
                 }
                 else {
                     button.setImageDrawable(image_play)
@@ -61,20 +62,25 @@ class PlayerMusic {
             }
         }
 
-        mediaPlayer.setOnCompletionListener {
+        mediaPlayer.setOnCompletionListener {MP ->
+            handler.removeCallbacksAndMessages(null)
+            handler.removeCallbacks(runnable)
+            view.sbProgress.setProgress(0, true)
+            view.currentTiming.text = context.getString(R.string.min_value_music)
             button.setImageDrawable(image_play)
         }
     }
 
-    fun initInitializeSeekBar(duration: TextView, currentTiming: TextView, seekBar: SeekBar) {
+    fun initInitializeSeekBar(view: View, context: Context) {
+        val seekBar: SeekBar = view.sbProgress
+
         seekBar.max = mediaPlayer.seconds
 
         runnable = Runnable {
             seekBar.progress = mediaPlayer.currentSeconds
-
-            duration.text = "0:${mediaPlayer.currentSeconds}"
-            val diff = mediaPlayer.seconds - mediaPlayer.currentSeconds
-            //currentTiming.text = "$diff"
+            //duration.text = "0:${mediaPlayer.currentSeconds}"
+            //val diff = mediaPlayer.seconds - mediaPlayer.currentSeconds
+            view.currentTiming.text = context.getString(R.string.duration_format, mediaPlayer.currentSeconds)
 
             handler.postDelayed(runnable, 1000)
         }
