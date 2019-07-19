@@ -1,21 +1,31 @@
 package com.example.deezer_play
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Handler
+import android.os.IBinder
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.TextView
 import kotlinx.android.synthetic.main.track_fragment.view.*
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
-class PlayerMusic {
+
+class PlayerMusic : Service() {
+
+    private  var notificationManager: NotificationManager? = null
+
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var runnable: Runnable
     private var handler: Handler = Handler()
@@ -54,6 +64,7 @@ class PlayerMusic {
                     button.setImageDrawable(image_pause)
                     mediaPlayer.start()
                     initInitializeSeekBar(view, context)
+                    setNotification(context)
                 }
                 else {
                     button.setImageDrawable(image_play)
@@ -123,4 +134,60 @@ class PlayerMusic {
         get() {
             return this.currentPosition/1000
         }
+
+
+    private fun createNotificationChannel(id: String, name: String,
+                                          description: String) {
+
+        val importance = NotificationManager.IMPORTANCE_LOW
+        val channel = NotificationChannel(id, name, importance)
+
+        channel.description = description
+        channel.enableLights(true)
+        channel.enableVibration(true)
+        channel.vibrationPattern =
+            longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+        notificationManager?.createNotificationChannel(channel)
+    }
+
+
+    private fun setNotification(context: Context){
+
+        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+
+     //   notificationManager =
+       //     getSystemService(
+      //          Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        createNotificationChannel(
+            "com.ebookfrenzy.notifydemo.news",
+            "NotifyDemo News",
+            "Example News Channel"
+        )
+
+        val channelID = "com.ebookfrenzy.notifydemo.news"
+
+
+
+        val notification = Notification.Builder(context,
+            channelID)
+            .setContentTitle("Example Notification")
+            .setContentText("This is an  example notification.")
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setChannelId(channelID)
+            //.setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+              //  .setShowActionsInCompactView(0, 1, 2)
+                //.setMediaSession(mMediaSession?.sessionToken))
+            /*  .addAction(R.drawable.ic_previous, getString(R.string.previous), getIntent(PREVIOUS))
+              .addAction(playPauseIcon, getString(R.string.playpause), getIntent(PLAYPAUSE))
+              .addAction(R.drawable.ic_next, getString(R.string.next), getIntent(NEXT))*/
+            .build()
+        val notificationID = 101
+
+
+        notificationManager?.notify(notificationID, notification)
+
+
+    }
 }

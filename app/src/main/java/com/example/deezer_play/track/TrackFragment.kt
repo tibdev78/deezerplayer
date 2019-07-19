@@ -1,8 +1,13 @@
 package com.example.deezer_play.track
 
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -75,16 +80,20 @@ class TrackFragment : Fragment() {
         }
     }
     private fun launchMusic(preview: String, button: ImageView, view: View) {
-            context?.also {ctx ->
-                playerMusic.setMediaplayer(preview)
-                playerMusic.prepareMediaPlayer(button, ctx, view)
-                playerMusic.progressSeekBar(sbProgress)
-            }
+        context?.also { ctx ->
+            playerMusic.setMediaplayer(preview)
+            playerMusic.prepareMediaPlayer(button, ctx, view)
+            playerMusic.progressSeekBar(sbProgress)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         playerMusic.stopMusic()
     }
+
+
+
+
 
 }
