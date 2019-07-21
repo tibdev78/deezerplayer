@@ -148,7 +148,7 @@ class PlayerMusic : Service() {
     fun previousTrack(position: Int, tracksData: List<TracksData>, context: Context) {
         if (position == 0) {
             TrackManager.newInstance(context).setCurrentTrack(tracksData.get(tracksData.size - 1))
-            TrackManager.newInstance(context).setPosition(position - 1)
+            TrackManager.newInstance(context).setPosition(tracksData.size - 1)
         } else {
             TrackManager.newInstance(context).setCurrentTrack(tracksData.get(position - 1))
             TrackManager.newInstance(context).setPosition(position - 1)
