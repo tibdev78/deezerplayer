@@ -1,5 +1,6 @@
 package com.example.deezer_play
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.app.Notification.EXTRA_NOTIFICATION_ID
 import android.content.Context
@@ -22,19 +23,17 @@ import com.example.deezer_play.managers.TrackManager
 import com.example.deezer_play.tracks.TracksData
 import kotlinx.android.synthetic.main.activity_tracks.view.*
 import kotlinx.android.synthetic.main.track_fragment.view.*
+import kotlinx.android.synthetic.main.notification_layout.view.*
 import android.app.Activity
 import android.preference.PreferenceManager
 import android.content.SharedPreferences
-
-
-
-
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.widget.Toast
 
 
 @Suppress("DEPRECATION")
 class PlayerMusic : Service() {
-
-    private  var notificationManager: NotificationManager? = null
 
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -44,6 +43,9 @@ class PlayerMusic : Service() {
     private var mediaPlayer: MediaPlayer = MediaPlayer()
     private lateinit var runnable: Runnable
     private var handler: Handler = Handler()
+
+
+    lateinit var  title : RecyclerView
 
     fun setTrackMediaPlayer(context: Context) {
         try {
@@ -58,6 +60,7 @@ class PlayerMusic : Service() {
         return uri
     }
 
+    @SuppressLint("WrongConstant")
     fun prepareMediaPlayer(context: Context, view: View) {
         val image_play = ContextCompat.getDrawable(context, R.drawable.ic_play)
         val image_pause = ContextCompat.getDrawable(context, R.drawable.ic_pause)
@@ -74,7 +77,11 @@ class PlayerMusic : Service() {
                     view.btPlay.setImageDrawable(image_pause)
                     mediaPlayer.start()
                     initInitializeSeekBar(view, context)
-                    setNotification(context, view)
+                    PlayerNotification().lunchNotification(view,context)
+
+
+
+
 
                 }
                 else {
@@ -185,81 +192,8 @@ class PlayerMusic : Service() {
         }
 
 
-    private fun createNotificationChannel(id: String, name: String,
-                                          description: String) {
-
-        val importance = NotificationManager.IMPORTANCE_LOW
-        val channel = NotificationChannel(id, name, importance)
-
-        channel.description = description
-        channel.enableLights(true)
-        channel.enableVibration(true)
-        channel.vibrationPattern =
-            longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-        notificationManager?.createNotificationChannel(channel)
-    }
-
-
-    private fun setNotification(context: Context ,view: View){
-
-        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-
-     //   notificationManager =
-       //     getSystemService(
-      //          Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        createNotificationChannel(
-            "com.ebookfrenzy.notifydemo.news",
-            "NotifyDemo News",
-            "Example News Channel"
-        )
-
-        val channelID = "com.ebookfrenzy.notifydemo.news"
-
-        val mediaSession1 : MediaSession = MediaSession(context,"laMediaSession")
-
-        val intent = Intent("snooze")
-        val penndapp = PendingIntent.getBroadcast(context,12345,intent,PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-       /* val snoozeIntent = Intent(this, MyBroadcastReceiver::class.java).apply {
-            action = ACTION_SNOOZE
-            putExtra(EXTRA_NOTIFICATION_ID, 0)
-        }
-        val snoozePendingIntent: PendingIntent =
-            PendingIntent.getBroadcast(this, 0, snoozeIntent, 0)*/
-
-
-        val viewNotification = RemoteViews("com.example.deezer_play",R.layout.notification_layout)
-
-        val notification = Notification.Builder(context,
-            channelID)
-            .setContent(viewNotification)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setPriority(Notification.PRIORITY_HIGH)
-            .setChannelId(channelID)
-            .setStyle(Notification.MediaStyle()
-                .setShowActionsInCompactView(0,1,2)
-                .setMediaSession(mediaSession1.sessionToken))
-            .addAction(R.drawable.ic_back, "back", penndapp)
-            .addAction(R.drawable.ic_play, "pause", penndapp)
-            .addAction(R.drawable.ic_next, "next", penndapp)
-            .build()
-        val notificationID = 101
-
-
-        notificationManager?.notify(notificationID, notification)
-
-
-        initactionnotif()
-
-
-    }
-
-    private fun initactionnotif() {
 
 
 
-    }
+
 }
