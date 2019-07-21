@@ -12,10 +12,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object DeezerProvider {
-    private val USER_ID = "2892838484"
     private val URL_API = "https://api.deezer.com"
     private var service: DeezerService
-    private var albumsData: List<AlbumsData>? = null
 
     init {
         service = Retrofit.Builder().baseUrl(URL_API)

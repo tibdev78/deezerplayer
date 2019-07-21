@@ -3,6 +3,7 @@ package com.example.deezer_play.tracks
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -79,6 +80,8 @@ class TracksActivity: AppCompatActivity() {
         tracksAdapter.setListener(object : TracksAdapter.ClickListener {
             override fun onClick(fragment: TrackFragment) {
                 val transaction = supportFragmentManager.beginTransaction()
+                transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 transaction.replace(R.id.tracks_activity_content, fragment)
                 transaction.addToBackStack(null)
                 transaction.commit()

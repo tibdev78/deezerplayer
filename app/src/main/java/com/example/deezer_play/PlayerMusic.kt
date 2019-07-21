@@ -8,12 +8,16 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Handler
 import android.os.IBinder
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
+import com.example.deezer_play.managers.TrackManager
+import com.example.deezer_play.tracks.TracksData
 import kotlinx.android.synthetic.main.track_fragment.view.*
 
 
@@ -26,59 +30,72 @@ class PlayerMusic : Service() {
         return null
     }
 
-    private lateinit var mediaPlayer: MediaPlayer
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
     private lateinit var runnable: Runnable
     private var handler: Handler = Handler()
 
-    private fun createAudioAttributes(): AudioAttributes {
-        val builder = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-        return builder.build()
-    }
-
-    fun setMediaplayer(preview: String) {
-        mediaPlayer = MediaPlayer()
-        val audioAttributes = createAudioAttributes()
-        mediaPlayer.setAudioAttributes(audioAttributes)
+    fun setTrackMediaPlayer(context: Context) {
         try {
-            mediaPlayer.setDataSource(preview)
+            mediaPlayer = MediaPlayer.create(context, parseStringToUri(TrackManager.newInstance(context).getCurrentTrack().preview))
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         }
     }
 
-    fun prepareMediaPlayer(button: ImageView, context: Context, view: View) {
+    fun parseStringToUri(url: String): Uri {
+        val uri: Uri = Uri.parse(url)
+        return uri
+    }
+
+    fun prepareMediaPlayer(context: Context, view: View) {
         val image_play = ContextCompat.getDrawable(context, R.drawable.ic_play)
         val image_pause = ContextCompat.getDrawable(context, R.drawable.ic_pause)
 
-        try {
-            mediaPlayer.prepareAsync()
-        } catch (e: IllegalStateException) {
-            e.printStackTrace()
-        }
-
         mediaPlayer.setOnPreparedListener {
-            button.setOnClickListener {
+            view.btPlay.setOnClickListener {
                 if (!mediaPlayer.isPlaying) {
-                    button.setImageDrawable(image_pause)
+                    view.btPlay.setImageDrawable(image_pause)
                     mediaPlayer.start()
                     initInitializeSeekBar(view, context)
                     setNotification(context)
                 }
                 else {
-                    button.setImageDrawable(image_play)
+                    view.btPlay.setImageDrawable(image_play)
                     mediaPlayer.pause()
                 }
             }
+
+
+            view.btNext.setOnClickListener {
+                nextTrack(TrackManager.newInstance(context).getPosition(), TrackManager.newInstance(context).getCurrentTrackList(), context)
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+                mediaPlayer.release()
+                setTrackMediaPlayer(context)
+                view.btPlay.setImageDrawable(image_play)
+                view.track_name.text = TrackManager.newInstance(context).getCurrentTrack().title
+
+            }
+
+            view.btPrevious.setOnClickListener {
+                previousTrack(TrackManager.newInstance(context).getPosition(), TrackManager.newInstance(context).getCurrentTrackList(), context)
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+                mediaPlayer.release()
+                setTrackMediaPlayer(context)
+                view.btPlay.setImageDrawable(image_play)
+                view.track_name.text = TrackManager.newInstance(context).getCurrentTrack().title
+            }
         }
+
+
 
         mediaPlayer.setOnCompletionListener {MP ->
             handler.removeCallbacksAndMessages(null)
             handler.removeCallbacks(runnable)
             view.sbProgress.setProgress(0, true)
             view.currentTiming.text = context.getString(R.string.min_value_music)
-            button.setImageDrawable(image_play)
+            view.btPlay.setImageDrawable(image_play)
         }
     }
 
@@ -89,8 +106,6 @@ class PlayerMusic : Service() {
 
         runnable = Runnable {
             seekBar.progress = mediaPlayer.currentSeconds
-            //duration.text = "0:${mediaPlayer.currentSeconds}"
-            //val diff = mediaPlayer.seconds - mediaPlayer.currentSeconds
             view.currentTiming.text = context.getString(R.string.duration_format, mediaPlayer.currentSeconds)
 
             handler.postDelayed(runnable, 1000)
@@ -105,12 +120,8 @@ class PlayerMusic : Service() {
                     mediaPlayer.seekTo(progress * 1000)
                 }
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 
         })
     }
@@ -121,6 +132,26 @@ class PlayerMusic : Service() {
             mediaPlayer.reset()
             mediaPlayer.release()
             handler.removeCallbacks(runnable)
+        }
+    }
+
+    fun nextTrack(position: Int, tracksData: List<TracksData>, context: Context) {
+        if (position + 1 < tracksData.size) {
+            TrackManager.newInstance(context).setCurrentTrack(tracksData.get(position + 1))
+            TrackManager.newInstance(context).setPosition(position + 1)
+        } else {
+            TrackManager.newInstance(context).setCurrentTrack(tracksData.get(0))
+            TrackManager.newInstance(context).setPosition(0)
+        }
+    }
+
+    fun previousTrack(position: Int, tracksData: List<TracksData>, context: Context) {
+        if (position == 0) {
+            TrackManager.newInstance(context).setCurrentTrack(tracksData.get(tracksData.size - 1))
+            TrackManager.newInstance(context).setPosition(position - 1)
+        } else {
+            TrackManager.newInstance(context).setCurrentTrack(tracksData.get(position - 1))
+            TrackManager.newInstance(context).setPosition(position - 1)
         }
     }
 
@@ -152,13 +183,8 @@ class PlayerMusic : Service() {
 
 
     private fun setNotification(context: Context){
-
-        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-
-     //   notificationManager =
-       //     getSystemService(
-      //          Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channelID = "com.ebookfrenzy.notifydemo.news"
+        val notificationID = 101
 
         createNotificationChannel(
             "com.ebookfrenzy.notifydemo.news",
@@ -166,8 +192,7 @@ class PlayerMusic : Service() {
             "Example News Channel"
         )
 
-        val channelID = "com.ebookfrenzy.notifydemo.news"
-
+        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 
         val notification = Notification.Builder(context,
@@ -176,18 +201,9 @@ class PlayerMusic : Service() {
             .setContentText("This is an  example notification.")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setChannelId(channelID)
-            //.setStyle(androidx.media.app.NotificationCompat.MediaStyle()
-              //  .setShowActionsInCompactView(0, 1, 2)
-                //.setMediaSession(mMediaSession?.sessionToken))
-            /*  .addAction(R.drawable.ic_previous, getString(R.string.previous), getIntent(PREVIOUS))
-              .addAction(playPauseIcon, getString(R.string.playpause), getIntent(PLAYPAUSE))
-              .addAction(R.drawable.ic_next, getString(R.string.next), getIntent(NEXT))*/
             .build()
-        val notificationID = 101
-
 
         notificationManager?.notify(notificationID, notification)
-
 
     }
 }

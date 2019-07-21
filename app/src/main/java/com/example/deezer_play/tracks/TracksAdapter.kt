@@ -1,11 +1,13 @@
 package com.example.deezer_play.tracks
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.deezer_play.R
+import com.example.deezer_play.managers.TrackManager
 import com.example.deezer_play.track.TrackFragment
 import com.example.deezer_play.track.TrackView
 import kotlinx.android.synthetic.main.activity_tracks.view.*
@@ -24,15 +26,18 @@ class TracksAdapter: RecyclerView.Adapter<TracksAdapter.TracksListViewHolder>() 
     override fun getItemCount() = tracksData?.size ?: 0
 
     override fun onBindViewHolder(holder: TracksListViewHolder, position: Int) {
-        val tracksData: TracksData = tracksData!![position]
-        holder.trackName.text = tracksData.title
+        val currentTrackData: TracksData = tracksData!![position]
+
+        holder.trackName.text = currentTrackData.title
 
         holder.itemView.setOnClickListener {
             val fragment = TrackFragment.newInstance(
-                albumsInformation!![1],
-                albumsInformation!![0],
-                tracksData
+                albumsInformation as List<String>,
+                currentTrackData,
+                tracksData as List<TracksData>,
+                position
             )
+
             listener?.onClick(fragment)
 
         }
