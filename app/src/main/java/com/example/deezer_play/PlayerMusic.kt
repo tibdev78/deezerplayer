@@ -2,39 +2,23 @@ package com.example.deezer_play
 
 import android.annotation.SuppressLint
 import android.app.*
-import android.app.Notification.EXTRA_NOTIFICATION_ID
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
-import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-import android.media.session.MediaSession
 import android.os.Handler
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.RemoteViews
 import android.widget.SeekBar
 import com.example.deezer_play.managers.TrackManager
 import com.example.deezer_play.tracks.TracksData
-import kotlinx.android.synthetic.main.activity_tracks.view.*
 import kotlinx.android.synthetic.main.track_fragment.view.*
-import kotlinx.android.synthetic.main.notification_layout.view.*
-import android.app.Activity
-import android.preference.PreferenceManager
-import android.content.SharedPreferences
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.widget.Toast
 
 
 @Suppress("DEPRECATION")
 class PlayerMusic : Service() {
-
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -61,15 +45,10 @@ class PlayerMusic : Service() {
     }
 
     @SuppressLint("WrongConstant")
-    fun prepareMediaPlayer(context: Context, view: View) {
+    fun prepareMediaPlayer(context: Context, view: View, albumsImage: String) {
         val image_play = ContextCompat.getDrawable(context, R.drawable.ic_play)
         val image_pause = ContextCompat.getDrawable(context, R.drawable.ic_pause)
 
-        try {
-            mediaPlayer.prepareAsync()
-        } catch (e: IllegalStateException) {
-            e.printStackTrace()
-        }
 
         mediaPlayer.setOnPreparedListener {
             view.btPlay.setOnClickListener {
@@ -77,12 +56,7 @@ class PlayerMusic : Service() {
                     view.btPlay.setImageDrawable(image_pause)
                     mediaPlayer.start()
                     initInitializeSeekBar(view, context)
-                    PlayerNotification().lunchNotification(view,context)
-
-
-
-
-
+                    PlayerNotification().lunchNotification(view,context, albumsImage)
                 }
                 else {
                     view.btPlay.setImageDrawable(image_play)
@@ -113,6 +87,7 @@ class PlayerMusic : Service() {
             }
         }
 
+
         mediaPlayer.setOnCompletionListener {MP ->
             handler.removeCallbacksAndMessages(null)
             handler.removeCallbacks(runnable)
@@ -129,8 +104,6 @@ class PlayerMusic : Service() {
 
         runnable = Runnable {
             seekBar.progress = mediaPlayer.currentSeconds
-            //duration.text = "0:${mediaPlayer.currentSeconds}"
-            //val diff = mediaPlayer.seconds - mediaPlayer.currentSeconds
             view.currentTiming.text = context.getString(R.string.duration_format, mediaPlayer.currentSeconds)
 
             handler.postDelayed(runnable, 1000)
@@ -190,10 +163,4 @@ class PlayerMusic : Service() {
         get() {
             return this.currentPosition/1000
         }
-
-
-
-
-
-
 }

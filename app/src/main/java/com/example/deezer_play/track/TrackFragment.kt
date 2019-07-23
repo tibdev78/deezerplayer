@@ -1,10 +1,8 @@
 package com.example.deezer_play.track
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +14,13 @@ import com.example.deezer_play.managers.TrackManager
 import com.example.deezer_play.tracks.TracksData
 import kotlinx.android.synthetic.main.track_fragment.*
 import kotlinx.android.synthetic.main.track_fragment.track_name
-import kotlinx.android.synthetic.main.track_fragment.view.*
 import java.io.Serializable
 
 class TrackFragment : Fragment() {
 
     private var playerMusic: PlayerMusic = PlayerMusic()
     private lateinit var trackManager: TrackManager
+    private var albumsImage: String = ""
 
     companion object {
         const val ARGS_ALBUM_INFO = "albumInfo"
@@ -58,6 +56,7 @@ class TrackFragment : Fragment() {
 
         tracks_album.text = albumInformation.get(0)
         track_name.text = trackData.get(0).title
+        albumsImage = albumInformation.get(1)
 
         Glide.with(this)
             .load(albumInformation.get(1))
@@ -86,7 +85,7 @@ class TrackFragment : Fragment() {
     private fun launchMusic(view: View) {
         context?.also { ctx ->
             playerMusic.setTrackMediaPlayer(ctx)
-            playerMusic.prepareMediaPlayer(ctx, view)
+            playerMusic.prepareMediaPlayer(ctx, view, albumsImage)
             playerMusic.progressSeekBar(sbProgress)
         }
     }

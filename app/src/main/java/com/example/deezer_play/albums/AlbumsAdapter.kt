@@ -2,7 +2,6 @@ package com.example.deezer_play.albums
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.deezer_play.R
 import com.example.deezer_play.tracks.TracksActivity
-import java.io.Serializable
 
 class AlbumsAdapter: RecyclerView.Adapter<AlbumsAdapter.AlbumsListViewHolder>() {
 

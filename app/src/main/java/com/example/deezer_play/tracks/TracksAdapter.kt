@@ -1,16 +1,12 @@
 package com.example.deezer_play.tracks
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.deezer_play.R
-import com.example.deezer_play.managers.TrackManager
 import com.example.deezer_play.track.TrackFragment
-import com.example.deezer_play.track.TrackView
-import kotlinx.android.synthetic.main.activity_tracks.view.*
 
 class TracksAdapter: RecyclerView.Adapter<TracksAdapter.TracksListViewHolder>() {
 

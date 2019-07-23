@@ -1,9 +1,12 @@
 package com.example.deezer_play.tracks
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -33,6 +36,16 @@ class TracksActivity: AppCompatActivity() {
         this.actionbar!!.setDisplayHomeAsUpEnabled(true)
 
         displayedTracks()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter("play_track"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -89,5 +102,12 @@ class TracksActivity: AppCompatActivity() {
             }
 
         })
+    }
+
+    val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("ddd", "dddddd")
+        }
+
     }
 }

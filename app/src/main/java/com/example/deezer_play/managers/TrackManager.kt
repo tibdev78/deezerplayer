@@ -2,7 +2,6 @@ package com.example.deezer_play.managers
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.example.deezer_play.tracks.TracksData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

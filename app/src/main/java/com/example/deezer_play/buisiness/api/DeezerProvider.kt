@@ -1,6 +1,5 @@
 package com.example.deezer_play.buisiness.api
 
-import android.util.Log
 import com.example.deezer_play.albums.AlbumsData
 import com.example.deezer_play.albums.AlbumsResponse
 import com.example.deezer_play.tracks.TracksData

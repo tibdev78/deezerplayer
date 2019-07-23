@@ -4,19 +4,22 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.ImageView
 import android.widget.RemoteViews
-import android.widget.Toast
 import com.example.deezer_play.managers.TrackManager
-import kotlinx.android.synthetic.main.notification_layout.view.*
+import com.example.deezer_play.tracks.TracksActivity
 
 
 class PlayerNotification {
 
+    companion object {
+        fun newInstance(): PlayerMusic {
+            return PlayerMusic()
+        }
+    }
 
     private  var notificationManager : NotificationManager? =null
 
@@ -36,7 +39,15 @@ class PlayerNotification {
 
 
      @SuppressLint("WrongConstant", "ShowToast")
-     fun lunchNotification(view: View, context: Context){
+     fun lunchNotification(view: View, context: Context, albumsImage: String){
+
+         val intent = Intent(context, TracksActivity::class.java)
+         val playTrack = Intent("play_track")
+         val pendingPlayTrack: PendingIntent = PendingIntent.getBroadcast(context, 0, playTrack, PendingIntent.FLAG_UPDATE_CURRENT)
+         val channelID = "com.ebookfrenzy.notifydemo.news"
+         val viewNotification = RemoteViews("com.example.deezer_play",R.layout.notification_layout)
+         val notificationID = 101
+
 
          notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -47,9 +58,6 @@ class PlayerNotification {
             "Example News Channel"
         )
 
-        val channelID = "com.ebookfrenzy.notifydemo.news"
-        val viewNotification = RemoteViews("com.example.deezer_play",R.layout.notification_layout)
-
         val notification = Notification.Builder(context,
             channelID)
             .setContent(viewNotification)
@@ -58,15 +66,12 @@ class PlayerNotification {
             .setPriority(Notification.PRIORITY_HIGH)
             .setChannelId(channelID)
             .build()
-        val notificationID = 101
+
+         viewNotification.setOnClickPendingIntent(R.id.n_pause, pendingPlayTrack)
+
+         viewNotification.setTextViewText(R.id.n_title, TrackManager.newInstance(context).getCurrentTrack().title)
+         viewNotification.setImageViewResource(R.id.n_cover, R.drawable.bg_placeholder_cover)
 
         notificationManager?.notify(notificationID, notification)
-
-         view.n_back.setOnClickListener {
-             Toast.makeText(context,"lolollllol", 1000 )
-         }
-
-
      }
-
 }
